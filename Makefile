@@ -1,10 +1,10 @@
 CC 				:= gcc
-CC_FLAGS 	:= -g -Wall -fPIC -shared
+CC_FLAGS 	:= -g -ansi -pedantic -std=c99 -Wall -fPIC -shared
 SRC 			:= squib.c
 TARGET 		:= squib
 
 all: squib.c
-	$(CC) $(CC_FLAGS) $(SRC) -o $(TARGET)
+	$(CC) $(CC_FLAGS) $(SRC) -o $(TARGET) -lm
 
 clean:
 	rm $(TARGET)
