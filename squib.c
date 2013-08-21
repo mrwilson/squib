@@ -15,7 +15,7 @@ typedef struct {
   int count;
 } PrsCtx;
 
-static void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv){
+void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv){
   PrsCtx *p;
   int xType, yType;
 
@@ -50,7 +50,7 @@ static void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv
   }
 }
 
-static double pearson(PrsCtx *p) {
+double pearson(PrsCtx *p) {
   int n = p->count;
 
   double top = p->prod - (p->x_sum*p->y_sum / n),
@@ -60,7 +60,7 @@ static double pearson(PrsCtx *p) {
   return top/sqrt(x_b * y_b);
 }
 
-static void pearsonFinalize(sqlite3_context *context){
+void pearsonFinalize(sqlite3_context *context){
   PrsCtx *p;
   p = sqlite3_aggregate_context(context, 0);
 
