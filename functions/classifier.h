@@ -7,6 +7,8 @@
   SQLITE_EXTENSION_INIT1
 #endif
 
+#define NUMBER_OF_PASSES 10
+
 typedef struct Classifier {
   int count;
   int feature_count;
@@ -14,6 +16,8 @@ typedef struct Classifier {
 } Classifier;
 
 Classifier *c;
+
+int pass = 1;
 
 double sigmoid(double x) {
   return 1.0 / (1.0 + exp(-x));
@@ -54,8 +58,18 @@ void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** arg
 }
 
 void trainClassifierFinalise(sqlite3_context *context){
-  for(int i = 0; i < c->feature_count; i++) {
-    printf("(%d) %f\n",i,c->features[i]);
+  sqlite3 *db = sqlite3_context_db_handle(context);
+  sqlite3_stmt *stmt = sqlite3_next_stmt(db, NULL);
+
+  if(pass < NUMBER_OF_PASSES) {
+    printf("Pass %d complete\n",pass);
+    pass++;
+    sqlite3_reset(stmt);
+    sqlite3_step(stmt);
+  } else {
+    for(int i = 0; i < c->feature_count; i++) {
+      printf("(%d) %f\n",i,c->features[i]);
+    }
   }
 }
 
