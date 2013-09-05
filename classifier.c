@@ -20,12 +20,12 @@ double sigmoid(double x) {
 }
 
 double classify_instance(int count, sqlite3_value** features) {
-  double logit = 0.0,
+  double logit = c->features[0],
          feature_value;
 
   for(int i = 0; i < count; i++) {
     feature_value = sqlite3_value_double(features[i]);
-    logit += c->features[i] * feature_value;
+    logit += c->features[i+1] * feature_value;
   }
 
   return sigmoid(logit);
@@ -33,12 +33,14 @@ double classify_instance(int count, sqlite3_value** features) {
 
 void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** argv){
   int label;
-  double result, feature_value;
+  double result, feature_value, alpha;
+
+  alpha = 1/pass;
 
   argc--;
 
   if(c == NULL) {
-    c = malloc(sizeof(struct Classifier) + argc*sizeof(double));
+    c = malloc(sizeof(struct Classifier) + (argc+1)*sizeof(double));
     c->feature_count = argc;
   }
 
@@ -47,9 +49,11 @@ void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** arg
   label  = sqlite3_value_int64(argv[argc]);
   result = classify_instance(argc, argv);
 
+  c->features[0] = c->features[0] + alpha*(label - result); // Bias term
+
   for(int i = 0; i < argc; i++) {
     feature_value = sqlite3_value_double(argv[i]);
-    c->features[i] = c->features[i] + (0.01 * (label - result) * feature_value);
+    c->features[i+1] = c->features[i+1] + (alpha * (label - result) * feature_value);
   }
 }
 
@@ -63,8 +67,9 @@ void trainClassifierFinalise(sqlite3_context *context){
     sqlite3_reset(stmt);
     sqlite3_step(stmt);
   } else {
+    printf("(Bias) %f\n", c->features[0]);
     for(int i = 0; i < c->feature_count; i++) {
-      printf("(%d) %f\n",i,c->features[i]);
+      printf("(%d) %f\n", i+1, c->features[i+1]);
     }
   }
 }
