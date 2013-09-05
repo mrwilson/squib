@@ -2,11 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-
-#ifndef SQLITE_EXTENSION_INIT1
-  #include <sqlite3ext.h>
-  SQLITE_EXTENSION_INIT1
-#endif
+#include <sqlite3.h>
 
 typedef struct {
   double x_sum;

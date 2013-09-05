@@ -2,8 +2,8 @@
 
 SQLITE_EXTENSION_INIT1
 
-#include "./functions/pearson.h"
-#include "./functions/classifier.h"
+#include "classifier.h"
+#include "pearson.h"
 
 void setup_functions(sqlite3 *db) {
   // pearson

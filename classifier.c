@@ -1,11 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#ifndef SQLITE_EXTENSION_INIT1
-  #include <sqlite3ext.h>
-  SQLITE_EXTENSION_INIT1
-#endif
+#include <sqlite3.h>
 
 #define NUMBER_OF_PASSES 10
 
