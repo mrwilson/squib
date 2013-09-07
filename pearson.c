@@ -3,15 +3,7 @@
 #include <assert.h>
 #include <math.h>
 #include <sqlite3.h>
-
-typedef struct {
-  double x_sum;
-  double y_sum;
-  double x_sqr;
-  double y_sqr;
-  double prod;
-  int count;
-} PrsCtx;
+#include "pearson.h"
 
 void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv){
   PrsCtx *p;

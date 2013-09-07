@@ -4,6 +4,10 @@ SQLITE_EXTENSION_INIT1
 
 #include "classifier.h"
 #include "pearson.h"
+#include "utils.h"
+
+void setup_functions(sqlite3 *db);
+int sqlite3_extension_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
 
 void setup_functions(sqlite3 *db) {
   // pearson
@@ -15,6 +19,7 @@ void setup_functions(sqlite3 *db) {
 }
 
 int sqlite3_extension_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi){
+  UNUSED(pzErrMsg);
   int rc = SQLITE_OK;
   SQLITE_EXTENSION_INIT2(pApi);
   setup_functions(db);

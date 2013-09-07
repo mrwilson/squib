@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sqlite3.h>
+#include "classifier.h"
+#include "utils.h"
 
 #define NUMBER_OF_PASSES 10
 
@@ -32,7 +34,9 @@ double classify_instance(int count, sqlite3_value** features) {
 }
 
 void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** argv){
-  int label;
+  UNUSED(context);
+
+  long long label;
   double result, feature_value, alpha;
 
   alpha = 1/pass;
@@ -40,7 +44,7 @@ void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** arg
   argc--;
 
   if(c == NULL) {
-    c = malloc(sizeof(struct Classifier) + (argc+1)*sizeof(double));
+    c = malloc(sizeof(struct Classifier) + ((unsigned long) argc)*sizeof(double));
     c->feature_count = argc;
   }
 
