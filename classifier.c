@@ -10,7 +10,7 @@
 typedef struct Classifier {
   int count;
   int feature_count;
-  double features[];
+  double *features;
 } Classifier;
 
 Classifier *c;
@@ -44,8 +44,10 @@ void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** arg
   argc--;
 
   if(c == NULL) {
-    c = malloc(sizeof(struct Classifier) + ((unsigned long) argc)*sizeof(double));
+    c = malloc(sizeof(struct Classifier));
     c->feature_count = argc;
+    c->count = 0;
+    c->features = (double *) calloc((size_t) argc+1, sizeof(double));
   }
 
   c->count++;
@@ -53,11 +55,11 @@ void trainClassifierStep(sqlite3_context* context, int argc, sqlite3_value** arg
   label  = sqlite3_value_int64(argv[argc]);
   result = classify_instance(argc, argv);
 
-  c->features[0] = c->features[0] + alpha*(label - result); // Bias term
+  c->features[0] += alpha*(label - result); // Bias term
 
   for(int i = 0; i < argc; i++) {
     feature_value = sqlite3_value_double(argv[i]);
-    c->features[i+1] = c->features[i+1] + (alpha * (label - result) * feature_value);
+    c->features[i+1] += (alpha * (label - result) * feature_value);
   }
 }
 
