@@ -13,7 +13,7 @@ typedef struct Classifier {
   double *features;
 } Classifier;
 
-Classifier *c;
+Classifier *c = NULL;
 
 int pass = 1;
 
