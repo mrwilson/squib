@@ -25,8 +25,12 @@ function run_test {
   else
     echo passed.
   fi
+  
+  cleanup
 
 }
+
+trap cleanup EXIT
 
 for T in $(find $TESTS -type f); do
 
