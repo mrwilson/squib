@@ -20,10 +20,10 @@ function run_test {
     exit 1
   fi
 
-  if [ "$OUT" == "FAIL" ]; then
-    echo failed!
-  else
+  if [ "$OUT" == "SUCCESS" ]; then
     echo passed.
+  else
+    echo failed!
   fi
   
   cleanup
