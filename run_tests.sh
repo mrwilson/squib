@@ -17,13 +17,14 @@ function run_test {
   if [[ $? -ne 0 ]]; then
     echo error!
     echo $OUT
-    exit 1
+    exit 2
   fi
 
   if [ "$OUT" == "SUCCESS" ]; then
     echo passed.
   else
     echo failed!
+    exit 1
   fi
   
   cleanup
