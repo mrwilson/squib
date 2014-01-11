@@ -5,19 +5,28 @@
 #include <sqlite3.h>
 #include "pearson.h"
 
+void validateTypes(sqlite3_context *context, int a, int b) {
+
+  if (a == SQLITE_NULL || b == SQLITE_NULL) {
+    sqlite3_result_error(context, "Null types.", -1);
+  }
+
+  if ((a != SQLITE_INTEGER && a != SQLITE_FLOAT) || a != b) {
+    sqlite3_result_error(context, "Incompatible types.", -1);
+  }
+
+}
+
 void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv){
   PrsCtx *p;
   int xType, yType;
 
-  assert(argc == 2);
-
   p = sqlite3_aggregate_context(context, sizeof(*p));
+
   xType = sqlite3_value_numeric_type(argv[0]);
   yType = sqlite3_value_numeric_type(argv[1]);
 
-  if (xType == SQLITE_NULL || yType == SQLITE_NULL || xType != yType) {
-    sqlite3_result_error(context, "Null or incompatible types.", -1);
-  }
+  validateTypes(context, xType, yType);
 
   if(p){
     p->count++;

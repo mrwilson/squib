@@ -13,5 +13,6 @@ typedef struct {
 } PrsCtx;
 
 double pearson(PrsCtx *p);
+void validateTypes(sqlite3_context *context, int a, int b);
 void pearsonStep(sqlite3_context *context, int argc, sqlite3_value **argv);
 void pearsonFinalize(sqlite3_context *context);
