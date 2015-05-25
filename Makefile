@@ -1,8 +1,7 @@
 CC_FLAGS  := -g -ansi -pedantic -std=c99 -Wall -fPIC -shared
 SRC       := squib.c pearson.c classifier.c
 TARGET    := squib
-
-TESTS     := ./run_tests.sh
+BATS_DIR  := /tmp/bats
 
 ifeq ($(CC),clang)
 	CC_FLAGS := $(CC_FLAGS) -Weverything
@@ -18,5 +17,8 @@ squib: squib.c
 clean:
 	@rm -f $(TARGET)
 
-test: squib
-	@$(TESTS)
+bats:
+	@[ -d $(BATS_DIR) ] || git clone https://github.com/sstephenson/bats.git $(BATS_DIR)
+
+test: squib bats
+	@$(BATS_DIR)/bin/bats tests/
